@@ -4,19 +4,21 @@ package com.amily;
 import com.amily.Enum.RocketQueues;
 import com.amily.component.rocketmq.producer.RocketProducerService;
 import org.apache.rocketmq.client.producer.SendResult;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.PostConstruct;
-
-@Component
-public class ProducerDemo {
+@SpringBootTest(classes = RocketMQDemoApplication.class)
+@RunWith(SpringJUnit4ClassRunner.class)
+public class ProducerTest {
 
     @Autowired
     RocketProducerService senderService;
 
 
-    @PostConstruct
+    @Test
     public void defaultMQProducer() {
 
         try {

@@ -10,14 +10,6 @@ import java.io.*;
 public class MqMsgConvertUtil {
 
     public static final byte[] emptyBytes = new byte[0];
-    public static final String emptyString = "";
-    public static final String JMS_MSGMODEL = "jmsMsgModel";
-    public static final String COMPATIBLE_FIELD_MSGMODEL = "notifyOutMsgModel";
-    public static final String MSGMODEL_TEXT = "textMessage";
-    public static final String MSGMODEL_BYTES = "bytesMessage";
-    public static final String MSGMODEL_OBJ = "objectMessage";
-    public static final String MSG_TOPIC = "msgTopic";
-    public static final String MSG_TYPE = "msgType";
 
     public MqMsgConvertUtil() {
     }

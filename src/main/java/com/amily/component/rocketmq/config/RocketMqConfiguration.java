@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 
 
 /**
@@ -15,6 +16,7 @@ import org.springframework.core.annotation.Order;
 @Slf4j
 @ConfigurationProperties(prefix = "rocketmq")
 @Order(-1)
+@Component
 public class RocketMqConfiguration {
 
     public static final String ENABLE_ROCKETMQ_KEE = "mq.enableRocketMQ";
