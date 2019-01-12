@@ -1,4 +1,4 @@
-package com.amily.component.rocketmq;
+package com.amily.util;
 
 import com.amily.Enum.MqAction;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;

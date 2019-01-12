@@ -1,4 +1,4 @@
-package com.amily.component.rocketmq.util;
+package com.amily.util;
 
 import java.io.*;
 

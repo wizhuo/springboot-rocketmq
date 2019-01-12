@@ -1,14 +1,14 @@
-package com.amily.component.rocketmq.config;
+package com.amily.config;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 
 /**
+ * rocketmq 的配置文件
  * @author liz
  * @since 2019/1/4 下午10:14
  **/
@@ -16,8 +16,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @ConfigurationProperties(prefix = "rocketmq")
 @Order(-1)
-@Component
-public class RocketMqConfiguration {
+public class RocketMqProperties {
 
     public static final String ENABLE_ROCKETMQ_KEE = "mq.enableRocketMQ";
 

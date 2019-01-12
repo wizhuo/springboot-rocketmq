@@ -1,9 +1,8 @@
-package com.amily.component.rocketmq.consumer;
+package com.amily.config;
 
 import com.amily.Enum.MqAction;
-import com.amily.common.annotation.RocketMqListener;
-import com.amily.component.rocketmq.MessageListener;
-import com.amily.component.rocketmq.config.RocketMqConfiguration;
+import com.amily.annotation.RocketMqListener;
+import com.amily.util.MessageListener;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -25,11 +24,11 @@ import java.util.Map;
 public class RocketMqConsumerConfig {
     public ApplicationContext context;
     private volatile boolean init = false;
-    private RocketMqConfiguration configuration;
+    private RocketMqProperties configuration;
     private Map<String, DefaultMQPushConsumer> consumerMap;
 
 
-    public RocketMqConsumerConfig(RocketMqConfiguration configuration, ApplicationContext context) {
+    public RocketMqConsumerConfig(RocketMqProperties configuration, ApplicationContext context) {
         this.context = context;
         this.configuration = configuration;
     }
@@ -94,6 +93,7 @@ public class RocketMqConsumerConfig {
 
         consumerMap.forEach((key, consumer) -> {
             try {
+                consumer.setInstanceName(System.currentTimeMillis()+"");
                 consumer.start();
                 log.info(String.format("自建RocketMQ 成功加载 Topic-tag:%s", key));
             } catch (MQClientException e) {

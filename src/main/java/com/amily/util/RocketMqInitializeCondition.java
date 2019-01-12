@@ -1,6 +1,6 @@
-package com.amily.component.rocketmq;
+package com.amily.util;
 
-import com.amily.component.rocketmq.config.RocketMqConfiguration;
+import com.amily.config.RocketMqProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
@@ -15,8 +15,8 @@ public class RocketMqInitializeCondition implements Condition {
 
     @Override
     public boolean matches(ConditionContext conditionContext, AnnotatedTypeMetadata annotatedTypeMetadata) {
-        String enable = conditionContext.getEnvironment().getProperty(RocketMqConfiguration.ENABLE_ROCKETMQ_KEE, "false").trim();
-        log.debug("是否启用rocketmq:{}", enable);
-        return true;
+        String enable = conditionContext.getEnvironment().getProperty(RocketMqProperties.ENABLE_ROCKETMQ_KEE).trim();
+        System.out.println("是否启用rocketmq:"+enable);
+        return Boolean.valueOf(enable);
     }
 }

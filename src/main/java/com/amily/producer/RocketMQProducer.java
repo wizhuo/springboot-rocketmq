@@ -1,4 +1,4 @@
-package com.amily.component.rocketmq.producer;
+package com.amily.producer;
 
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 

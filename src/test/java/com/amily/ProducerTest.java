@@ -2,7 +2,7 @@ package com.amily;
 
 
 import com.amily.Enum.RocketQueues;
-import com.amily.component.rocketmq.producer.RocketProducerService;
+import com.amily.producer.RocketProducerService;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,12 +14,16 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ProducerTest {
 
-    @Autowired
+    @Autowired(required = false)
     RocketProducerService senderService;
 
 
     @Test
     public void defaultMQProducer() {
+        if(senderService==null){
+            System.out.println("mq 没启用，直接返回,不进行测试");
+            return;
+        }
 
         try {
 

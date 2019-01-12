@@ -1,22 +1,20 @@
-package com.amily.component.rocketmq.producer;
+package com.amily.producer;
 
-import com.amily.component.rocketmq.config.RocketMqConfiguration;
-import com.amily.component.rocketmq.exception.MqClientException;
-import com.amily.component.rocketmq.exception.MqExceptionContext;
+import com.amily.config.RocketMqProperties;
+import com.amily.exception.MqClientException;
+import com.amily.exception.MqExceptionContext;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.common.message.Message;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component
 public class RocketProducerService implements SendCallback {
 
     @Autowired
-    RocketMqConfiguration rocketMqConfiguration;
+    RocketMqProperties rocketMqConfiguration;
     /**
      * 这个是自建RocketMQ的生产者
      */

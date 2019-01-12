@@ -1,4 +1,4 @@
-package com.amily.component.rocketmq.exception;
+package com.amily.exception;
 
 
 /**

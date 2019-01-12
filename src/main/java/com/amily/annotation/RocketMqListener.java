@@ -1,4 +1,4 @@
-package com.amily.common.annotation;
+package com.amily.annotation;
 
 import org.springframework.stereotype.Component;
 
