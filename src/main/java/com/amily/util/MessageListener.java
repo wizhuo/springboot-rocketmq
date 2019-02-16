@@ -11,5 +11,11 @@ import org.apache.rocketmq.common.message.MessageExt;
  **/
 public interface MessageListener {
 
+    /**
+     * mq 消费接口
+     * @param var1
+     * @param context
+     * @return
+     */
     MqAction consume(MessageExt var1, ConsumeConcurrentlyContext context);
 }

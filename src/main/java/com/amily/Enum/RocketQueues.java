@@ -1,5 +1,9 @@
 package com.amily.Enum;
-
+/**
+ *
+ * @author lizhuo
+ * @since 2019/2/16 17:46
+ */
 public enum RocketQueues {
 
     /** 分成账户变动通知 */

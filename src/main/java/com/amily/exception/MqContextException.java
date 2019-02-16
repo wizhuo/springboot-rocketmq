@@ -4,13 +4,13 @@ package com.amily.exception;
  * @author lizhuo
  * @since 2019/1/5 下午9:24
  **/
-public class MqExceptionContext extends Throwable {
+public class MqContextException extends Throwable {
 
     private String messageId;
     private String topic;
     private MqClientException exception;
 
-    public MqExceptionContext() {
+    public MqContextException() {
     }
 
     public String getMessageId() {

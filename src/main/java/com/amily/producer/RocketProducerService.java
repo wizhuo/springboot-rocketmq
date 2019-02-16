@@ -2,13 +2,18 @@ package com.amily.producer;
 
 import com.amily.config.RocketMqProperties;
 import com.amily.exception.MqClientException;
-import com.amily.exception.MqExceptionContext;
+import com.amily.exception.MqContextException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.common.message.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+/**
+ *
+ * @author lizhuo
+ * @since 2019/2/16 17:46
+ */
 
 @Slf4j
 public class RocketProducerService implements SendCallback {
@@ -19,12 +24,12 @@ public class RocketProducerService implements SendCallback {
      * 这个是自建RocketMQ的生产者
      */
     @Autowired(required = false)
-    private DefaultMQProducer RocketProducer;
+    private DefaultMQProducer rocketProducer;
 
-    private RocketSendCallback RocketSendCallback = new RocketSendCallback();
+    private RocketSendCallback rocketSendCallback = new RocketSendCallback();
 
     private boolean isRocketMQ() {
-        return RocketProducer != null;
+        return rocketProducer != null;
     }
 
 
@@ -39,7 +44,7 @@ public class RocketProducerService implements SendCallback {
         try {
             Message msg = getMessage(topic, tag, content);
             if (isRocketMQ()) {
-                RocketProducer.sendOneway(msg);
+                rocketProducer.sendOneway(msg);
             }
             this.logMsg(msg);
         } catch (Exception e) {
@@ -59,7 +64,7 @@ public class RocketProducerService implements SendCallback {
     public void oneWaySender(Message msg, String content) {
         msg.setBody(content.getBytes());
         try {
-            RocketProducer.sendOneway(msg);
+            rocketProducer.sendOneway(msg);
         } catch (Exception e) {
             log.warn("单边发送消息失败", e);
         }
@@ -77,7 +82,7 @@ public class RocketProducerService implements SendCallback {
         Message msg = getMessage(topic, tag, content);
         try {
             if (isRocketMQ()) {
-                RocketProducer.send(msg, RocketSendCallback);
+                rocketProducer.send(msg, rocketSendCallback);
             }
         } catch (Exception e) {
             log.warn("异步发送消息失败", e);
@@ -99,7 +104,7 @@ public class RocketProducerService implements SendCallback {
         Message msg = getMessage(topic, tag, content);
         try {
             if (isRocketMQ()) {
-                RocketProducer.send(msg, new org.apache.rocketmq.client.producer.SendCallback() {
+                rocketProducer.send(msg, new org.apache.rocketmq.client.producer.SendCallback() {
                     @Override
                     public void onSuccess(SendResult sendResult) {
                         sendCallBack.onSuccess(sendResult);
@@ -107,7 +112,7 @@ public class RocketProducerService implements SendCallback {
 
                     @Override
                     public void onException(Throwable e) {
-                        MqExceptionContext exceptionContext = new MqExceptionContext();
+                        MqContextException exceptionContext = new MqContextException();
                         exceptionContext.setTopic(topic);
                         exceptionContext.setMessageId("");
                         exceptionContext.setException(new MqClientException(e));
@@ -135,7 +140,7 @@ public class RocketProducerService implements SendCallback {
         Message msg = getMessage(topic, tag, content);
         SendResult result = null;
         try {
-            SendResult sendResult = RocketProducer.send(msg);
+            SendResult sendResult = rocketProducer.send(msg);
             return sendResult;
         } catch (Exception e) {
             log.warn("同步发送消息失败", e);
@@ -189,8 +194,8 @@ public class RocketProducerService implements SendCallback {
 
     @Override
     public void onException(Throwable e) {
-        if(e instanceof MqExceptionContext){
-            MqExceptionContext context = (MqExceptionContext)e;
+        if(e instanceof MqContextException){
+            MqContextException context = (MqContextException)e;
             log.info("send message failed. topic=" + context.getTopic() + ", msgId=" + context.getMessageId());
         }else{
             log.info("send message failed. =" + e);

@@ -9,7 +9,7 @@ import java.io.*;
  **/
 public class MqMsgConvertUtil {
 
-    public static final byte[] emptyBytes = new byte[0];
+    public static final byte[] EMPTY_BYTES = new byte[0];
 
     public MqMsgConvertUtil() {
     }
@@ -33,7 +33,7 @@ public class MqMsgConvertUtil {
 
     public static final byte[] string2Bytes(String s, String charset) {
         if (null == s) {
-            return emptyBytes;
+            return EMPTY_BYTES;
         } else {
             byte[] bs = null;
 
