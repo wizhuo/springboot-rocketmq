@@ -1,8 +1,8 @@
 package com.amily;
 
 
-import com.amily.Enum.RocketQueues;
-import com.amily.producer.RocketProducerService;
+import com.amily.enums.RocketQueues;
+import com.amily.service.RocketProducerService;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.junit.Test;
 import org.junit.runner.RunWith;

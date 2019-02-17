@@ -1,8 +1,8 @@
-package com.amily.config;
+package com.amily.service;
 
-import com.amily.Enum.MqAction;
 import com.amily.annotation.RocketMqListener;
-import com.amily.util.MessageListener;
+import com.amily.config.RocketMqProperties;
+import com.amily.enums.MqAction;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -21,14 +21,14 @@ import java.util.Map;
  * @since 2019/1/4 下午10:15
  **/
 @Slf4j
-public class RocketMqConsumerConfig {
+public class RocketMqConsumer {
     public ApplicationContext context;
     private volatile boolean init = false;
     private RocketMqProperties configuration;
     private Map<String, DefaultMQPushConsumer> consumerMap;
 
 
-    public RocketMqConsumerConfig(RocketMqProperties configuration, ApplicationContext context) {
+    public RocketMqConsumer(RocketMqProperties configuration, ApplicationContext context) {
         this.context = context;
         this.configuration = configuration;
     }
@@ -98,6 +98,7 @@ public class RocketMqConsumerConfig {
                 log.info(String.format("自建RocketMQ 成功加载 Topic-tag:%s", key));
             } catch (MQClientException e) {
                 log.warn(String.format("自建RocketMQ 加载失败 Topic-tag:%s", key), e);
+                throw new RuntimeException(e.getMessage(), e);
             }
         });
         log.info("--------------成功初始化所有消费者到自建mq--------------");

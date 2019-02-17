@@ -1,4 +1,4 @@
-package com.amily.Enum;
+package com.amily.enums;
 
 
 /**
@@ -11,7 +11,7 @@ public enum MqAction {
     //消费成功确认消息
     ReconsumeLater;
 
-    private MqAction(){
+    MqAction() {
 
     }
 }

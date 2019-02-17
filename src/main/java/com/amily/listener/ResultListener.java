@@ -1,10 +1,10 @@
 package com.amily.listener;
 
 
-import com.amily.Enum.MqAction;
-import com.amily.Enum.RocketQueues;
+import com.amily.enums.MqAction;
+import com.amily.enums.RocketQueues;
 import com.amily.annotation.RocketMqListener;
-import com.amily.util.MessageListener;
+import com.amily.service.MessageListener;
 import com.amily.util.MqMsgConvertUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;

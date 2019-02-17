@@ -1,4 +1,4 @@
-package com.amily.config;
+package com.amily.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import org.springframework.context.ApplicationContext;
  * @since 2019/1/4 下午10:14
  **/
 @Slf4j
-public class RocketMqConsumerInitialize implements ApplicationRunner {
+public class RocketMqConsumerRunner implements ApplicationRunner {
 
     @Autowired
     private ApplicationContext context;
@@ -22,7 +22,7 @@ public class RocketMqConsumerInitialize implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         // 需要执行的逻辑代码，当spring容器初始化完成后就会执行该方法。
         System.out.println("hello======");
-        RocketMqConsumerConfig consumer = context.getBean(RocketMqConsumerConfig.class);
+        RocketMqConsumer consumer = context.getBean(RocketMqConsumer.class);
         consumer.start();
     }
 }

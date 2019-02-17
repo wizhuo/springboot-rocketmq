@@ -1,8 +1,8 @@
-package com.amily.producer;
+package com.amily.service;
 
 import com.amily.config.RocketMqProperties;
-import com.amily.exception.MqClientException;
 import com.amily.exception.MqContextException;
+import com.amily.exception.MqSendException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.SendCallback;
@@ -40,7 +40,7 @@ public class RocketProducerService implements SendCallback {
      * @param tag     tag
      * @param content 字符串消息体
      */
-    public void oneWaySender(String topic, String tag, String content) {
+    public void sendOneway(String topic, String tag, String content) {
         try {
             Message msg = getMessage(topic, tag, content);
             if (isRocketMQ()) {
@@ -49,27 +49,10 @@ public class RocketProducerService implements SendCallback {
             this.logMsg(msg);
         } catch (Exception e) {
             log.warn("单边发送消息失败", e);
+            throw new MqSendException(e);
         }
     }
 
-
-    /**
-     * 单边发送
-     * 这方法最好不要用
-     *
-     * @param msg     自建的Message对象
-     * @param content 字符串消息体
-     */
-    @Deprecated
-    public void oneWaySender(Message msg, String content) {
-        msg.setBody(content.getBytes());
-        try {
-            rocketProducer.sendOneway(msg);
-        } catch (Exception e) {
-            log.warn("单边发送消息失败", e);
-        }
-        this.logMsg(msg);
-    }
 
     /**
      * 异步发送 默认回调函数
@@ -86,46 +69,12 @@ public class RocketProducerService implements SendCallback {
             }
         } catch (Exception e) {
             log.warn("异步发送消息失败", e);
+            throw new MqSendException(e);
         }
         this.logMsg(msg);
     }
 
-    /**
-     * 指定回调处理类
-     *
-     * @param topic        topic
-     * @param tag          tag
-     * @param content      字符串消息体
-     * @param sendCallBack 发送完成后的回调处理类
-     */
-    @Deprecated
-    public void sendAsyncWithCallBack(String topic, String tag, String content, SendCallback sendCallBack) {
 
-        Message msg = getMessage(topic, tag, content);
-        try {
-            if (isRocketMQ()) {
-                rocketProducer.send(msg, new org.apache.rocketmq.client.producer.SendCallback() {
-                    @Override
-                    public void onSuccess(SendResult sendResult) {
-                        sendCallBack.onSuccess(sendResult);
-                    }
-
-                    @Override
-                    public void onException(Throwable e) {
-                        MqContextException exceptionContext = new MqContextException();
-                        exceptionContext.setTopic(topic);
-                        exceptionContext.setMessageId("");
-                        exceptionContext.setException(new MqClientException(e));
-                        sendCallBack.onException(exceptionContext);
-                    }
-                });
-            }
-        } catch (Exception e) {
-            log.warn("异步发送消息失败", e);
-        }
-
-        this.logMsg(msg);
-    }
 
     /**
      * 同步发送
@@ -138,16 +87,15 @@ public class RocketProducerService implements SendCallback {
     public SendResult synSend(String topic, String tag, String content) {
 
         Message msg = getMessage(topic, tag, content);
-        SendResult result = null;
         try {
             SendResult sendResult = rocketProducer.send(msg);
+            this.logMsg(msg);
             return sendResult;
         } catch (Exception e) {
             log.warn("同步发送消息失败", e);
+            throw new MqSendException(e);
         }
 
-        this.logMsg(msg);
-        return result;
     }
 
 

@@ -1,4 +1,4 @@
-package com.amily.Enum;
+package com.amily.enums;
 /**
  *
  * @author lizhuo

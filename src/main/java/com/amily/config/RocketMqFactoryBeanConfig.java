@@ -1,6 +1,6 @@
 package com.amily.config;
 
-import com.amily.producer.RocketMqProducer;
+import com.amily.service.RocketMqConsumer;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -11,12 +11,12 @@ import org.springframework.context.annotation.Bean;
  * @since 2019/1/4 下午10:14
  *
  **/
-public class RocketMqFactoryBean {
+public class RocketMqFactoryBeanConfig {
 
     @Bean
-    public RocketMqConsumerConfig createConsumer(RocketMqProperties configuration, ApplicationContext context) throws Exception {
+    public RocketMqConsumer createConsumer(RocketMqProperties configuration, ApplicationContext context) throws Exception {
         System.out.println("=======createConsumer===");
-        return new RocketMqConsumerConfig(configuration, context);
+        return new RocketMqConsumer(configuration, context);
     }
 
     @Bean
@@ -25,7 +25,7 @@ public class RocketMqFactoryBean {
         if (configuration.getNamesrvAddr() == null) {
             throw new IllegalArgumentException("rocketmq.nameSrvAddress 是必须的参数");
         }
-        DefaultMQProducer producer = new RocketMqProducer(configuration.getProducerId());
+        DefaultMQProducer producer = new DefaultMQProducer(configuration.getProducerId());
         producer.setNamesrvAddr(configuration.getNamesrvAddr());
         producer.setInstanceName(System.currentTimeMillis()+"");
         producer.start();

@@ -1,6 +1,6 @@
-package com.amily.util;
+package com.amily.service;
 
-import com.amily.Enum.MqAction;
+import com.amily.enums.MqAction;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.common.message.MessageExt;
 
