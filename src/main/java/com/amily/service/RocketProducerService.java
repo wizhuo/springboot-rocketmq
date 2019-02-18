@@ -9,8 +9,8 @@ import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.common.message.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+
 /**
- *
  * @author lizhuo
  * @since 2019/2/16 17:46
  */
@@ -75,7 +75,6 @@ public class RocketProducerService implements SendCallback {
     }
 
 
-
     /**
      * 同步发送
      *
@@ -89,7 +88,7 @@ public class RocketProducerService implements SendCallback {
         Message msg = getMessage(topic, tag, content);
         try {
             SendResult sendResult = rocketProducer.send(msg);
-            this.logMsg(msg);
+            this.logMsg(msg, sendResult);
             return sendResult;
         } catch (Exception e) {
             log.warn("同步发送消息失败", e);
@@ -119,12 +118,18 @@ public class RocketProducerService implements SendCallback {
     }
 
 
-
     /**
      * 打印消息topic等参数方便后续查找问题
      */
     private void logMsg(Message message) {
         log.info("消息队列发送完成:topic={},tag={},msgId={}", message.getTopic(), message.getTags(), message.getKeys());
+    }
+
+    /**
+     * 打印消息topic等参数方便后续查找问题
+     */
+    private void logMsg(Message message, SendResult sendResult) {
+        log.info("消息队列发送完成:topic={},tag={},msgId={},sendResult={}", message.getTopic(), message.getTags(), message.getKeys(), sendResult);
     }
 
     class RocketSendCallback implements SendCallback {
@@ -142,10 +147,10 @@ public class RocketProducerService implements SendCallback {
 
     @Override
     public void onException(Throwable e) {
-        if(e instanceof MqContextException){
-            MqContextException context = (MqContextException)e;
+        if (e instanceof MqContextException) {
+            MqContextException context = (MqContextException) e;
             log.info("send message failed. topic=" + context.getTopic() + ", msgId=" + context.getMessageId());
-        }else{
+        } else {
             log.info("send message failed. =" + e);
         }
 
