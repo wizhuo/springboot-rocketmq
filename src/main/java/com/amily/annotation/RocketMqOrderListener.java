@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import java.lang.annotation.*;
 
 /**
- * 普通消息监听
+ * 有序消息监听
  * @author lizhuo
  * @since 2019/1/4 下午10:11
  **/
@@ -15,7 +15,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Component
-public @interface RocketMqListener {
+public @interface RocketMqOrderListener {
 	String value() default "";
 
 	String topic();

@@ -8,7 +8,10 @@ import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.common.message.Message;
+import org.apache.rocketmq.common.message.MessageQueue;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 /**
  * @author lizhuo
@@ -96,6 +99,36 @@ public class RocketProducerService implements SendCallback {
         }
 
     }
+
+
+    /**
+     * 有顺序发送
+     *
+     * @param topic
+     * @param tag
+     * @param content
+     * @param orderId 相同的orderId 的消息会被有顺序的消费
+     * @return
+     */
+    public SendResult orderSend(String topic, String tag, String content, int orderId) {
+
+        Message msg = getMessage(topic, tag, content);
+        try {
+            SendResult sendResult = rocketProducer.send(msg, (List<MessageQueue> mqs, Message message, Object arg) -> {
+                        Integer id = (Integer) arg;
+                        int index = id % mqs.size();
+                        return mqs.get(index);
+                    }
+                    , orderId);
+            this.logMsg(msg,sendResult);
+            return sendResult;
+        } catch (Exception e) {
+            log.error("有顺序发送消息失败", e);
+            throw new MqSendException(e);
+        }
+
+    }
+
 
 
     /**

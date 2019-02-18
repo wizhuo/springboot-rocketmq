@@ -1,0 +1,21 @@
+package com.amily.service;
+
+import com.amily.enums.MqAction;
+import org.apache.rocketmq.client.consumer.listener.ConsumeOrderlyContext;
+import org.apache.rocketmq.common.message.MessageExt;
+
+
+/**
+ * @author lizhuo
+ * @since 2019/1/5 下午8:55
+ **/
+public interface MessageOrderListener {
+
+    /**
+     * mq 消费接口
+     * @param var1
+     * @param context
+     * @return
+     */
+    MqAction consume(MessageExt var1, ConsumeOrderlyContext context);
+}

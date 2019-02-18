@@ -7,9 +7,13 @@ package com.amily.enums;
 public enum RocketQueues {
 
     /** 分成账户变动通知 */
-    BATCH_CHANGE_ACCOUNT(RocketQueues.USER_TOPIC, "BATCH_CHANGE_ACCOUNT", "分成账户变动通知");
+    BATCH_CHANGE_ACCOUNT(RocketQueues.USER_TOPIC, "BATCH_CHANGE_ACCOUNT", "分成账户变动通知"),
+    /** 分成账户变动通知 */
+    USER_TABLE(RocketQueues.USER_ORDER_TOPIC, "USER_ORDER_TOPIC", "用户表变更同步")
+    ;
 
     public static final String USER_TOPIC = "USER_TOPIC";
+    public static final String USER_ORDER_TOPIC = "USER_ORDER_TOPIC";
 
     private final String topic;
     private final String tag;

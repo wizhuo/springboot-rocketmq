@@ -27,9 +27,17 @@ public class ProducerTest {
 
         try {
 
-            for (int i = 0; i < 5; i++) {
-                String messageBody = "我是消息内容:" + i;
-                SendResult result =  senderService.synSend(RocketQueues.BATCH_CHANGE_ACCOUNT.getTopic(), "ccc", messageBody);
+            for (int i = 0; i < 1; i++) {
+                String messageBody = "我是普通消息内容:" + i;
+                SendResult result =  senderService.synSend(RocketQueues.BATCH_CHANGE_ACCOUNT.getTopic(), "aaa", messageBody);
+                System.out.println("发送响应：MsgId:" + result.getMessageQueue().getTopic()+""+result.toString());
+
+            }
+
+            System.out.println("=========开始发送有顺序消息");
+            for (int i = 0; i < 1; i++) {
+                String messageBody = "我是有顺序消息内容:" + i;
+                SendResult result =  senderService.orderSend(RocketQueues.USER_TABLE.getTopic(), "ccc", messageBody,5);
                 System.out.println("发送响应：MsgId:" + result.getMessageQueue().getTopic()+""+result.toString());
 
             }
