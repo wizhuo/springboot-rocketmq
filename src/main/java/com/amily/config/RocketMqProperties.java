@@ -27,12 +27,6 @@ public class RocketMqProperties {
      */
     private String producerId;
 
-    /**
-     * mq集群消费者id
-     */
-    private String consumerId;
-
-
 
     public String getProducerId() {
         if (StringUtils.isBlank(producerId)) {
@@ -41,12 +35,6 @@ public class RocketMqProperties {
         return producerId;
     }
 
-    public String getConsumerId() {
-        if (StringUtils.isBlank(consumerId)) {
-            throw new IllegalArgumentException(" rocketmq.consumerId 是必须的");
-        }
-        return consumerId;
-    }
 
 
 

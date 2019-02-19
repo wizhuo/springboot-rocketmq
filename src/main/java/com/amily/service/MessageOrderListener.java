@@ -6,6 +6,7 @@ import org.apache.rocketmq.common.message.MessageExt;
 
 
 /**
+ * 有顺序消息监听
  * @author lizhuo
  * @since 2019/1/5 下午8:55
  **/

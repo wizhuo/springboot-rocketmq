@@ -21,4 +21,6 @@ public @interface RocketMqOrderListener {
 	String topic();
 
 	String tag() default "*";
+
+	String consumerGroup();
 }

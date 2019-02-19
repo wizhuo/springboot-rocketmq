@@ -4,6 +4,7 @@ import com.amily.annotation.RocketMqListener;
 import com.amily.annotation.RocketMqOrderListener;
 import com.amily.config.RocketMqProperties;
 import com.amily.enums.MqAction;
+import com.amily.util.GeneratorId;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -55,15 +56,19 @@ public class RocketMqConsumer {
     private void initializeConsumer(Map<String, DefaultMQPushConsumer> map) throws Exception {
 
         Map<String, String> topicMap = Maps.newHashMap();
+
+        Map<String, String> consumerGroupMap = Maps.newHashMap();
         //初始化普通消息消费者
-        initializeConcurrentlyConsumer(map, topicMap);
+        initializeConcurrentlyConsumer(map, topicMap, consumerGroupMap);
 
         //初始化有序消息消费者
-        initializeOrderConsumer(map, topicMap);
+        initializeOrderConsumer(map, topicMap, consumerGroupMap);
 
         consumerMap.forEach((key, consumer) -> {
             try {
-                consumer.setInstanceName(System.currentTimeMillis() + "");
+                String instanceName = System.currentTimeMillis() + GeneratorId.nextFormatId();
+                System.out.println("instanceName=" + instanceName);
+                consumer.setInstanceName(instanceName);
                 consumer.start();
                 log.info(String.format("自建RocketMQ 成功加载 Topic-tag:%s", key));
             } catch (MQClientException e) {
@@ -81,7 +86,7 @@ public class RocketMqConsumer {
      * @param map
      * @throws MQClientException
      */
-    private void initializeConcurrentlyConsumer(Map<String, DefaultMQPushConsumer> map, Map<String, String> topicMap) throws MQClientException {
+    private void initializeConcurrentlyConsumer(Map<String, DefaultMQPushConsumer> map, Map<String, String> topicMap, Map<String, String> consumerGroupMap) throws MQClientException {
         Map<String, Object> beansWithAnnotationMap = context.getBeansWithAnnotation(RocketMqListener.class);
         for (Map.Entry<String, Object> entry : beansWithAnnotationMap.entrySet()) {
             // 获取到实例对象的class信息
@@ -89,15 +94,10 @@ public class RocketMqConsumer {
             RocketMqListener rocketMqListenerAnnotaion = classIns.getDeclaredAnnotation(RocketMqListener.class);
             String topic = rocketMqListenerAnnotaion.topic();
             String tag = rocketMqListenerAnnotaion.tag();
-            if (StringUtils.isBlank(topic)) {
-                throw new RuntimeException(classIns.getSimpleName() + ":topic不能为空");
-            }
+            String consumerGroup = rocketMqListenerAnnotaion.consumerGroup();
+            validate(topicMap, consumerGroupMap, classIns, topic, consumerGroup);
 
-            if (topicMap.containsKey(topic)) {
-                throw new RuntimeException(String.format("Topic:%s 已经由%s监听 请勿重复监听同一Topic", topic, classIns.getSimpleName()));
-            }
-
-            DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(this.configuration.getConsumerId());
+            DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(consumerGroup);
             //设置名称服务器地址
             consumer.setNamesrvAddr(this.configuration.getNamesrvAddr());
             consumer.subscribe(topic, tag);
@@ -118,7 +118,25 @@ public class RocketMqConsumer {
             });
 
             topicMap.put(topic, classIns.getSimpleName());
+            consumerGroupMap.put(consumerGroup, classIns.getSimpleName());
             map.put(String.format("%s-%s", topic, tag), consumer);
+        }
+    }
+
+    private void validate(Map<String, String> topicMap, Map<String, String> consumerGroupMap, Class<?> classIns, String topic, String consumerGroup) {
+        if (StringUtils.isBlank(topic)) {
+            throw new RuntimeException(classIns.getSimpleName() + ":topic不能为空");
+        }
+        if (StringUtils.isBlank(consumerGroup)) {
+            throw new RuntimeException(classIns.getSimpleName() + ":consumerGroup不能为空");
+        }
+
+        if (topicMap.containsKey(topic)) {
+            throw new RuntimeException(String.format("Topic:%s 已经由%s监听 请勿重复监听同一Topic", topic, classIns.getSimpleName()));
+        }
+
+        if (consumerGroupMap.containsKey(consumerGroup)) {
+            throw new RuntimeException(String.format("consumerGroup:%s 已经由%s监听 请勿重复监听同一consumerGroup", consumerGroup, classIns.getSimpleName()));
         }
     }
 
@@ -128,7 +146,7 @@ public class RocketMqConsumer {
      * @param map
      * @throws MQClientException
      */
-    private void initializeOrderConsumer(Map<String, DefaultMQPushConsumer> map, Map<String, String> topicMap) throws MQClientException {
+    private void initializeOrderConsumer(Map<String, DefaultMQPushConsumer> map, Map<String, String> topicMap, Map<String, String> consumerGroupMap) throws MQClientException {
         Map<String, Object> beansWithAnnotationMap = context.getBeansWithAnnotation(RocketMqOrderListener.class);
 
         for (Map.Entry<String, Object> entry : beansWithAnnotationMap.entrySet()) {
@@ -137,15 +155,9 @@ public class RocketMqConsumer {
             RocketMqOrderListener rocketMqListenerAnnotaion = classIns.getDeclaredAnnotation(RocketMqOrderListener.class);
             String topic = rocketMqListenerAnnotaion.topic();
             String tag = rocketMqListenerAnnotaion.tag();
-            if (StringUtils.isBlank(topic)) {
-                throw new RuntimeException(classIns.getSimpleName() + ":topic不能为空");
-            }
-
-            if (topicMap.containsKey(topic)) {
-                throw new RuntimeException(String.format("Topic:%s 已经由%s监听 请勿重复监听同一Topic", topic, classIns.getSimpleName()));
-            }
-
-            DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(this.configuration.getConsumerId() + "-order");
+            String consumerGroup = rocketMqListenerAnnotaion.consumerGroup();
+            validate(topicMap, consumerGroupMap, classIns, topic, consumerGroup);
+            DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(consumerGroup);
             //设置名称服务器地址
             consumer.setNamesrvAddr(this.configuration.getNamesrvAddr());
             consumer.subscribe(topic, tag);
@@ -166,6 +178,7 @@ public class RocketMqConsumer {
             });
 
             topicMap.put(topic, classIns.getSimpleName());
+            consumerGroupMap.put(consumerGroup, classIns.getSimpleName());
             map.put(String.format("%s-%s", topic, tag), consumer);
         }
     }

@@ -1,7 +1,7 @@
 package com.amily;
 
 
-import com.amily.enums.RocketQueues;
+import com.amily.enums.RocketQueuesEnum;
 import com.amily.service.RocketProducerService;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.junit.Test;
@@ -28,16 +28,24 @@ public class ProducerTest {
         try {
 
             for (int i = 0; i < 1; i++) {
-                String messageBody = "我是普通消息内容:" + i;
-                SendResult result =  senderService.synSend(RocketQueues.BATCH_CHANGE_ACCOUNT.getTopic(), "aaa", messageBody);
+                String messageBody = "我是普通消息内容test:" + i;
+                SendResult result =  senderService.synSend(RocketQueuesEnum.ORDER_TABLE.getTopic(), "aaa", messageBody);
                 System.out.println("发送响应：MsgId:" + result.getMessageQueue().getTopic()+""+result.toString());
 
             }
 
             System.out.println("=========开始发送有顺序消息");
             for (int i = 0; i < 1; i++) {
-                String messageBody = "我是有顺序消息内容:" + i;
-                SendResult result =  senderService.orderSend(RocketQueues.USER_TABLE.getTopic(), "ccc", messageBody,5);
+                String messageBody = "我是有顺序消息内容test:" + i;
+                SendResult result =  senderService.orderSend(RocketQueuesEnum.USER_TABLE.getTopic(), "bbbb", messageBody,5);
+                System.out.println("发送响应：MsgId:" + result.getMessageQueue().getTopic()+""+result.toString());
+
+            }
+
+
+            for (int i = 0; i < 1; i++) {
+                String messageBody = "我是普通消息内容test【2222222222222222】:" + i;
+                SendResult result =  senderService.synSend(RocketQueuesEnum.STAFF_TABLE.getTopic(), "ccc", messageBody);
                 System.out.println("发送响应：MsgId:" + result.getMessageQueue().getTopic()+""+result.toString());
 
             }
