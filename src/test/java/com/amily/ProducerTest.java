@@ -29,7 +29,7 @@ public class ProducerTest {
 
             for (int i = 0; i < 1; i++) {
                 String messageBody = "我是普通消息内容test:" + i;
-                SendResult result =  senderService.synSend(RocketQueuesEnum.ORDER_TABLE.getTopic(), "aaa", messageBody);
+                SendResult result =  senderService.synSend(RocketQueuesEnum.ORDER_TABLE.getTopic(), "aaa","111", messageBody);
                 System.out.println("发送响应：MsgId:" + result.getMessageQueue().getTopic()+""+result.toString());
 
             }
@@ -37,7 +37,7 @@ public class ProducerTest {
             System.out.println("=========开始发送有顺序消息");
             for (int i = 0; i < 1; i++) {
                 String messageBody = "我是有顺序消息内容test:" + i;
-                SendResult result =  senderService.orderSend(RocketQueuesEnum.USER_TABLE.getTopic(), "bbbb", messageBody,5);
+                SendResult result =  senderService.orderSend(RocketQueuesEnum.USER_TABLE.getTopic(), "bbbb","11111", messageBody,5);
                 System.out.println("发送响应：MsgId:" + result.getMessageQueue().getTopic()+""+result.toString());
 
             }
@@ -45,7 +45,7 @@ public class ProducerTest {
 
             for (int i = 0; i < 1; i++) {
                 String messageBody = "我是普通消息内容test【2222222222222222】:" + i;
-                SendResult result =  senderService.synSend(RocketQueuesEnum.STAFF_TABLE.getTopic(), "ccc", messageBody);
+                SendResult result =  senderService.synSend(RocketQueuesEnum.STAFF_TABLE.getTopic(), "ccc","222", messageBody);
                 System.out.println("发送响应：MsgId:" + result.getMessageQueue().getTopic()+""+result.toString());
 
             }

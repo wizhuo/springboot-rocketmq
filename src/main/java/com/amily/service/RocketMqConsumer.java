@@ -6,8 +6,9 @@ import com.amily.config.RocketMqProperties;
 import com.amily.enums.MqAction;
 import com.amily.util.GeneratorId;
 import com.google.common.collect.Maps;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import org.apache.rocketmq.client.consumer.listener.ConsumeOrderlyStatus;
@@ -24,8 +25,8 @@ import java.util.Map;
  * @author lizhuo
  * @since 2019/1/4 下午10:15
  **/
-@Slf4j
 public class RocketMqConsumer {
+    private static Logger LOGGER = LogManager.getLogger();
     public ApplicationContext context;
     private volatile boolean init = false;
     private RocketMqProperties configuration;
@@ -40,7 +41,7 @@ public class RocketMqConsumer {
 
     public synchronized void start() throws Exception {
         if (this.init) {
-            log.warn("请不要重复初始化RocketMQ消费者");
+            LOGGER.warn("请不要重复初始化RocketMQ消费者");
             return;
         }
         this.consumerMap = Maps.newConcurrentMap();
@@ -67,16 +68,15 @@ public class RocketMqConsumer {
         consumerMap.forEach((key, consumer) -> {
             try {
                 String instanceName = System.currentTimeMillis() + GeneratorId.nextFormatId();
-                System.out.println("instanceName=" + instanceName);
                 consumer.setInstanceName(instanceName);
                 consumer.start();
-                log.info(String.format("自建RocketMQ 成功加载 Topic-tag:%s", key));
+                LOGGER.info(String.format("自建RocketMQ 成功加载 Topic-tag:%s", key));
             } catch (MQClientException e) {
-                log.warn(String.format("自建RocketMQ 加载失败 Topic-tag:%s", key), e);
+                LOGGER.error(String.format("自建RocketMQ 加载失败 Topic-tag:%s", key), e);
                 throw new RuntimeException(e.getMessage(), e);
             }
         });
-        log.info("--------------成功初始化所有消费者到自建mq--------------");
+        LOGGER.info("--------------成功初始化所有消费者到自建mq--------------");
 
     }
 
