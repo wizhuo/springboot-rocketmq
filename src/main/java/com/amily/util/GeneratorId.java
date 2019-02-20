@@ -29,7 +29,6 @@ public class GeneratorId {
         long a = System.currentTimeMillis();
         for (int i = 0; i < 2000000; i++) {
             nextFormatId();
-            // System.out.println(nextFormatId());
         }
         System.out.println(System.currentTimeMillis() - a);
 
@@ -49,8 +48,10 @@ public class GeneratorId {
 
     static {
         try {
-            int machineIdentifier = createMachineIdentifier(); // 机器码 --> 本机 mac 地址的 hashcode 值
-            int processIdentifier = createProcessIdentifier(); // 进程号 --> 当前运行的 jvm 进程号的 hashcode 值
+            // 机器码 --> 本机 mac 地址的 hashcode 值
+            int machineIdentifier = createMachineIdentifier();
+            // 进程号 --> 当前运行的 jvm 进程号的 hashcode 值
+            int processIdentifier = createProcessIdentifier();
 
             int hashcode = (machineIdentifier + "" + processIdentifier).hashCode();
             String mp = "";

@@ -22,8 +22,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @author zhaoyc
- * @version 创建时间：2017年10月18日 上午9:40:47
+ * @author lizhuo
+ * @since 2019/2/20 16:21
  */
 public class DateUtilsPlus extends DateUtils {
 
@@ -34,7 +34,7 @@ public class DateUtilsPlus extends DateUtils {
 
     /**
      * 获取指定时间的年月日
-     * 
+     *
      * @param date 指定时间
      * @return 获取年份
      */
@@ -47,7 +47,7 @@ public class DateUtilsPlus extends DateUtils {
 
     /**
      * 获取指定时间的月
-     * 
+     *
      * @param date 指定时间
      * @return 获取年份
      */
@@ -60,7 +60,7 @@ public class DateUtilsPlus extends DateUtils {
 
     /**
      * 获取指定时间的天
-     * 
+     *
      * @param date 指定时间
      * @return 获取年份
      */
@@ -74,7 +74,6 @@ public class DateUtilsPlus extends DateUtils {
 
     /**
      * 得到当月最后一天的'时间'
-     *
      */
     public static Date nowMonthLast() {
         Calendar now = Calendar.getInstance();
@@ -84,7 +83,7 @@ public class DateUtilsPlus extends DateUtils {
 
     /**
      * 获取当前时间不含时分秒
-     * 
+     *
      * @return 当前时间，不含有时分秒
      */
     public static LocalDate nowLocalDate() {
@@ -93,7 +92,7 @@ public class DateUtilsPlus extends DateUtils {
 
     /**
      * 获取当前时间含有时分秒
-     * 
+     *
      * @return 当前时间，含有时分秒
      */
     public static LocalDateTime nowLocalDateTimie() {
@@ -127,7 +126,7 @@ public class DateUtilsPlus extends DateUtils {
     /**
      * 根据时间类型的字符串得到指定格式的日期 <br/>
      *
-     * @param date : 日期
+     * @param date      : 日期
      * @param dateStyle | yyyy : 年 | MM : 月 | dd : 日 | HH : 时 | mm : 分 | ss : 秒
      */
     public static Date formatStringByStyleToDate(final String date, final String dateStyle) {
@@ -185,9 +184,9 @@ public class DateUtilsPlus extends DateUtils {
 
     /**
      * 取出开始时间和结束时间之间的时间集合,也包括开始时间和结束时间
-     * 
+     *
      * @param startDate 开始时间
-     * @param endDate 结束时间
+     * @param endDate   结束时间
      * @return 时间集合
      */
     public static List<Date> getDatesBetweenTwoDate(Date startDate, Date endDate) {
@@ -373,8 +372,8 @@ public class DateUtilsPlus extends DateUtils {
     public static Date getNowWeekMonday(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-
-        cal.add(Calendar.DAY_OF_MONTH, -1); // 解决周日会出现 并到下一周的情况
+        // 解决周日会出现 并到下一周的情况
+        cal.add(Calendar.DAY_OF_MONTH, -1);
         cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 
         // 设置为0时0分0秒
@@ -492,10 +491,10 @@ public class DateUtilsPlus extends DateUtils {
 
     /**
      * 时间累加方法
-     * 
+     *
      * @param dateTime 需要累计的时间
      * @param timeType 累计时间类型 Calendar.MINUTE(分钟) / Calendar.DAY_OF_MONTH(天数)
-     * @param timeNo 增加分钟数|天数
+     * @param timeNo   增加分钟数|天数
      * @return String
      */
     public static Date dateAddTimes(Date dateTime, int timeType, int timeNo) {
@@ -515,7 +514,7 @@ public class DateUtilsPlus extends DateUtils {
 
     /**
      * 获取零点
-     * 
+     *
      * @param 当前时间
      * @return date
      */

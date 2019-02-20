@@ -3,8 +3,9 @@ package com.amily.util;
 import lombok.Getter;
 
 /**
- * @author : zhaoyc
- * @date : 2017/7/17
+ *
+ * @author lizhuo
+ * @since 2019/2/20 16:21
  */
 @Getter
 public enum DateFormatStyleEnum {
