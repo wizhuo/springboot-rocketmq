@@ -1,8 +1,8 @@
 package com.amily;
 
 
-import com.amily.enums.RocketQueuesEnum;
-import com.amily.service.RocketProducerService;
+import com.amily.mq.command.MqConstant;
+import com.amily.mq.RocketMqProducerService;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +15,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class ProducerTest {
 
     @Autowired(required = false)
-    RocketProducerService senderService;
+    RocketMqProducerService senderService;
+
 
 
     @Test
@@ -27,28 +28,16 @@ public class ProducerTest {
 
         try {
 
-            for (int i = 0; i < 1; i++) {
-                String messageBody = "我是普通消息内容test:" + i;
-                SendResult result =  senderService.synSend(RocketQueuesEnum.ORDER_TABLE.getTopic(), "aaa","111", messageBody);
-                System.out.println("发送响应：MsgId:" + result.getMessageQueue().getTopic()+""+result.toString());
 
-            }
-
-            System.out.println("=========开始发送有顺序消息");
             for (int i = 0; i < 1; i++) {
-                String messageBody = "我是有顺序消息内容test:" + i;
-                SendResult result =  senderService.orderSend(RocketQueuesEnum.USER_TABLE.getTopic(), "bbbb","11111", messageBody,5);
-                System.out.println("发送响应：MsgId:" + result.getMessageQueue().getTopic()+""+result.toString());
+                String messageBody = "我是事务消息内容test:" + i;
+                System.out.println("事务消息发送前");
+                SendResult result =  senderService.transSend(MqConstant.USER_ORDER_TOPIC, "aaa","111", messageBody);
+                System.out.println("事务消息发送后：发送响应：MsgId:" + result.getMessageQueue().getTopic()+""+result.toString());
 
             }
 
 
-            for (int i = 0; i < 1; i++) {
-                String messageBody = "我是普通消息内容test【2222222222222222】:" + i;
-                SendResult result =  senderService.synSend(RocketQueuesEnum.STAFF_TABLE.getTopic(), "ccc","222", messageBody);
-                System.out.println("发送响应：MsgId:" + result.getMessageQueue().getTopic()+""+result.toString());
-
-            }
 
         } catch (Exception e) {
             e.printStackTrace();

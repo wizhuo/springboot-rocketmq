@@ -1,10 +1,10 @@
-package com.amily.listener;
+package com.amily.mq.listener;
 
 
 import com.amily.annotation.RocketMqOrderListener;
 import com.amily.enums.MqAction;
-import com.amily.enums.RocketQueuesEnum;
-import com.amily.service.MessageOrderListener;
+import com.amily.mq.command.MqConstant;
+import com.amily.mq.MessageOrderListener;
 import com.amily.util.MqMsgConvertUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.consumer.listener.ConsumeOrderlyContext;
@@ -15,7 +15,7 @@ import org.apache.rocketmq.common.message.MessageExt;
  * @since 2019/1/5 下午9:27
  **/
 @Slf4j
-@RocketMqOrderListener(topic = RocketQueuesEnum.USER_ORDER_TOPIC,consumerGroup=RocketQueuesEnum.USER_ORDER_GROUP)
+@RocketMqOrderListener(topic = MqConstant.USER_ORDER_TOPIC,consumerGroup= MqConstant.USER_ORDER_GROUP)
 public class MqOrderMessageRestListener implements MessageOrderListener {
 
 

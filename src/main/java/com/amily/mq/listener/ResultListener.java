@@ -1,10 +1,10 @@
-package com.amily.listener;
+package com.amily.mq.listener;
 
 
 import com.amily.enums.MqAction;
-import com.amily.enums.RocketQueuesEnum;
+import com.amily.mq.command.MqConstant;
 import com.amily.annotation.RocketMqListener;
-import com.amily.service.MessageListener;
+import com.amily.mq.MessageListener;
 import com.amily.util.MqMsgConvertUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
@@ -15,7 +15,7 @@ import org.apache.rocketmq.common.message.MessageExt;
  * @since 2019/1/5 下午9:27
  **/
 @Slf4j
-@RocketMqListener(topic = RocketQueuesEnum.STAFF_TOPIC, consumerGroup = RocketQueuesEnum.STAFF_TOPIC_GROUP)
+@RocketMqListener(topic = "TopicTest", consumerGroup = MqConstant.STAFF_TOPIC_GROUP)
 public class ResultListener implements MessageListener {
 
 

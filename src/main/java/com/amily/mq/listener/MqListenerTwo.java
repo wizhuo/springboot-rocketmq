@@ -1,10 +1,10 @@
-package com.amily.listener;
+package com.amily.mq.listener;
 
 
 import com.amily.annotation.RocketMqListener;
 import com.amily.enums.MqAction;
-import com.amily.enums.RocketQueuesEnum;
-import com.amily.service.MessageListener;
+import com.amily.mq.command.MqConstant;
+import com.amily.mq.MessageListener;
 import com.amily.util.MqMsgConvertUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,7 +16,7 @@ import org.apache.rocketmq.common.message.MessageExt;
  * @author lizhuo
  * @since 2019/1/5 下午9:27
  **/
-@RocketMqListener(topic = RocketQueuesEnum.ORDER_TABLE_TOP,consumerGroup=RocketQueuesEnum.ORDER_GROUP)
+@RocketMqListener(topic = MqConstant.ORDER_TABLE_TOP,consumerGroup= MqConstant.ORDER_GROUP)
 public class MqListenerTwo implements MessageListener {
 
     private static Logger LOGGER = LogManager.getLogger();

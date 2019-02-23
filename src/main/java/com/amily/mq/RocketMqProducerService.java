@@ -1,4 +1,4 @@
-package com.amily.service;
+package com.amily.mq;
 
 import com.amily.exception.MqContextException;
 import com.amily.exception.MqSendException;
@@ -8,9 +8,11 @@ import org.apache.logging.log4j.Logger;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.client.producer.TransactionMQProducer;
 import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.common.message.MessageQueue;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.List;
 
@@ -20,11 +22,16 @@ import java.util.List;
  */
 
 @Slf4j
-public class RocketProducerService implements SendCallback {
+public class RocketMqProducerService implements SendCallback {
     private static Logger LOGGER = LogManager.getLogger();
 
     @Autowired
+    @Qualifier("defaultProducer")
     private DefaultMQProducer rocketProducer;
+
+    @Autowired
+    @Qualifier("transProducer")
+    private TransactionMQProducer transactionMQProducer;
 
     private RocketSendCallback rocketSendCallback = new RocketSendCallback();
 
@@ -152,6 +159,42 @@ public class RocketProducerService implements SendCallback {
             return sendResult;
         } catch (Exception e) {
             LOGGER.error("同步发送消息失败", e);
+            throw new MqSendException(e);
+        }
+    }
+
+
+    /**
+     * 发送事务消息
+     *
+     * @param topic   topic
+     * @param tag     tag
+     * @param content 字符串消息体
+     * @return 可能返回null
+     */
+    public SendResult transSend(String topic, String tag, String content) {
+
+        return this.transSend(topic, tag, "", content);
+    }
+
+    /**
+     * 发送事务消息
+     *
+     * @param topic
+     * @param tag
+     * @param keys
+     * @param content
+     * @return
+     */
+    public SendResult transSend(String topic, String tag, String keys, String content) {
+
+        Message msg = getMessage(topic, tag, keys, content);
+        try {
+            SendResult sendResult = transactionMQProducer.sendMessageInTransaction(msg,null);
+            this.logMsg(msg, sendResult);
+            return sendResult;
+        } catch (Exception e) {
+            LOGGER.error("同步发送事务消息失败", e);
             throw new MqSendException(e);
         }
     }

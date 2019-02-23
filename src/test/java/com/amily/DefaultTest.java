@@ -1,6 +1,6 @@
 package com.amily;
 
-import com.amily.enums.RocketQueuesEnum;
+import com.amily.mq.command.MqConstant;
 import com.amily.util.DateUtilsPlus;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.SendResult;
@@ -16,12 +16,12 @@ public class DefaultTest {
         DefaultMQProducer producer = new
                 DefaultMQProducer("please_rename_unique_group_name");
         // Specify name server addresses.
-        producer.setNamesrvAddr("127.0.0.1:9876");
+        producer.setNamesrvAddr("120.79.177.244:9876");
         //Launch the instance.
         producer.start();
         for (int i = 0; i < 2; i++) {
             //Create a message instance, specifying topic, tag and message body.
-            Message msg = new Message(RocketQueuesEnum.ORDER_TABLE_TOP /* Topic */,
+            Message msg = new Message(MqConstant.ORDER_TABLE_TOP /* Topic */,
                     "aaa" /* Tag */,"111",
                     ("Hello RocketMQ 11111111111111111111" +DateUtilsPlus.formatDateByStyle(new Date())+
                             i).getBytes(RemotingHelper.DEFAULT_CHARSET) /* Message body */
@@ -35,7 +35,7 @@ public class DefaultTest {
 //        for (int i = 0; i < 1; i++) {
 //            int orderId = i % 10;
 //            //Create a message instance, specifying topic, tag and message body.
-//            Message msg = new Message(RocketQueuesEnum.USER_TABLE.getTopic(), "aaa", "KEY" + i,
+//            Message msg = new Message(MqConstant.USER_TABLE.getTopic(), "aaa", "KEY" + i,
 //                    ("Hello RocketMQ " + i+DateUtilsPlus.formatDateByStyle(new Date())).getBytes(RemotingHelper.DEFAULT_CHARSET));
 //            SendResult sendResult = producer.send(msg, new MessageQueueSelector() {
 //                @Override
@@ -51,7 +51,7 @@ public class DefaultTest {
 //
 //        for (int i = 0; i < 1; i++) {
 //            //Create a message instance, specifying topic, tag and message body.
-//            Message msg = new Message(RocketQueuesEnum.STAFF_TABLE.getTopic() /* Topic */,
+//            Message msg = new Message(MqConstant.STAFF_TABLE.getTopic() /* Topic */,
 //                    "ccc" /* Tag */,
 //                    ("Hello RocketMQ 3333333333333 " + DateUtilsPlus.formatDateByStyle(new Date())+
 //                            i).getBytes(RemotingHelper.DEFAULT_CHARSET) /* Message body */

@@ -1,4 +1,4 @@
-package com.amily.service;
+package com.amily.mq;
 
 import com.amily.annotation.RocketMqListener;
 import com.amily.annotation.RocketMqOrderListener;

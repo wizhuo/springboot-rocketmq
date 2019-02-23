@@ -1,16 +1,16 @@
-package com.amily.service;
+package com.amily.mq;
 
 import com.amily.enums.MqAction;
-import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
+import org.apache.rocketmq.client.consumer.listener.ConsumeOrderlyContext;
 import org.apache.rocketmq.common.message.MessageExt;
 
 
 /**
- * 普通消息监听
+ * 有顺序消息监听
  * @author lizhuo
  * @since 2019/1/5 下午8:55
  **/
-public interface MessageListener {
+public interface MessageOrderListener {
 
     /**
      * mq 消费接口
@@ -18,5 +18,5 @@ public interface MessageListener {
      * @param context
      * @return
      */
-    MqAction consume(MessageExt var1, ConsumeConcurrentlyContext context);
+    MqAction consume(MessageExt var1, ConsumeOrderlyContext context);
 }

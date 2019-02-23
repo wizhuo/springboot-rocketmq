@@ -1,4 +1,4 @@
-package com.amily.service;
+package com.amily.mq;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

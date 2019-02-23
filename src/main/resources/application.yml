@@ -1,0 +1,25 @@
+applicationName: amily
+server:
+  port: 8011
+# NameServer地址 用;作为地址的分隔符
+rocketmq:
+  namesrvAddr: 120.79.177.244:9876
+# 生产者的组名
+  producerId: msa-product-test
+
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/rocketmq?characterEncoding=UTF-8&useUnicode=true&useSSL=false
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+# 配置mybatis-plus
+mybatis-plus:
+  # 配置扫描xml
+  mapper-locations: classpath:mapper/*.xml
+  # 实体扫描，多个package用逗号或者分号分隔
+  type-aliases-package: com.amily.dal.entity
+
+

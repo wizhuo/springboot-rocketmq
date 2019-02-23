@@ -1,6 +1,8 @@
 package com.amily.controller;
 
-import com.amily.entity.User;
+import com.amily.dal.entity.UserEntity;
+import com.amily.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,11 +15,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HelloController {
 
+
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/hello")
-    public User hello(){
-        User user = new User();
-        user.setName("hello");
-        user.setAge(18);
-        return user;
+    public UserEntity hello(){
+       return userService.selectById(1L);
+
+    }
+
+    @GetMapping("/trans/test")
+    public Boolean transTest(){
+        return userService.transMessageTest();
+
     }
 }

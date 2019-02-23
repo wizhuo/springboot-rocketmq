@@ -1,9 +1,9 @@
 package com.amily.annotation;
 
-import com.amily.service.RocketMqConsumerRunner;
+import com.amily.mq.RocketMqConsumerRunner;
 import com.amily.config.RocketMqFactoryBeanConfig;
 import com.amily.config.RocketMqProperties;
-import com.amily.service.RocketProducerService;
+import com.amily.mq.RocketMqProducerService;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;
@@ -15,7 +15,7 @@ import java.lang.annotation.*;
 @Import({
         RocketMqProperties.class,
         RocketMqConsumerRunner.class,
-        RocketProducerService.class,
+        RocketMqProducerService.class,
         RocketMqProperties.class,
         RocketMqFactoryBeanConfig.class
 })
