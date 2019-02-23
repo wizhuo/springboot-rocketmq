@@ -13,8 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @Component
@@ -25,16 +23,11 @@ public class TransactionListenerImpl implements TransactionListener {
     private MessageService messageService;
 
 
-    private AtomicInteger transactionIndex = new AtomicInteger(0);
-
-    private ConcurrentHashMap<String, Integer> localTrans = new ConcurrentHashMap<>();
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public LocalTransactionState executeLocalTransaction(Message msg, Object arg) {
-        int value = transactionIndex.getAndIncrement();
-        int status = value % 3;
-        localTrans.put(msg.getTransactionId(), status);
+        
         System.out.println("=========executeLocalTransaction============");
         MessageEntity messageEntity = new MessageEntity();
         messageEntity.setCreateTime(new Date());
