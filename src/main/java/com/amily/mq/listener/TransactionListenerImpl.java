@@ -39,7 +39,7 @@ public class TransactionListenerImpl implements TransactionListener {
         messageEntity.setMsgid(msg.getTransactionId());
         messageService.save(messageEntity);
       //  throw new RuntimeException();
-        return LocalTransactionState.COMMIT_MESSAGE;
+        return LocalTransactionState.UNKNOW;
     }
 
     @Override
