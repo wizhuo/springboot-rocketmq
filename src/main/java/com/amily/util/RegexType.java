@@ -3,8 +3,9 @@ package com.amily.util;
 import java.io.Serializable;
 
 /**
- * @author : zhaoyc
- * @date : 2016/10/24
+ *
+ * @author lizhuo
+ * @since 2020/3/17 15:28
  */
 public final class RegexType implements Serializable {
 

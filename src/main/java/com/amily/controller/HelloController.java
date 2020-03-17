@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
  * @author lizhuo
  * @since 2019/1/13 上午12:29
  **/
-
 @RestController
 public class HelloController {
 

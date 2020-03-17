@@ -21,7 +21,6 @@ public class RocketMqConsumerRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         // 需要执行的逻辑代码，当spring容器初始化完成后就会执行该方法。
-        System.out.println("hello======");
         RocketMqConsumer consumer = context.getBean(RocketMqConsumer.class);
         consumer.start();
     }

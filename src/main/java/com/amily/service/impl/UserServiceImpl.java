@@ -7,7 +7,8 @@ import com.amily.mq.RocketMqProducerService;
 import com.amily.mq.command.MqConstant;
 import com.amily.service.UserService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,11 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
  * @author lizhuo
  * @since 2019-02-23
  */
-@Slf4j
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, UserEntity> implements UserService {
 
-
+private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
 
     @Autowired
@@ -54,9 +54,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserEntity> impleme
         userEntity.setUsername("trans");
         this.save(userEntity);
         //开始发送mq 事务消息
-        log.info("begin send trans message");
+        LOGGER.info("begin send trans message");
         rocketMqProducerService.transSend(MqConstant.USER_ORDER_TOPIC,MqConstant.USER_TAG,"hello");
-        log.info(" end send tran message");
+        LOGGER.info(" end send tran message");
         return true;
     }
 }

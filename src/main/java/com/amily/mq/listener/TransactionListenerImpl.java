@@ -8,16 +8,23 @@ import org.apache.rocketmq.client.producer.LocalTransactionState;
 import org.apache.rocketmq.client.producer.TransactionListener;
 import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.common.message.MessageExt;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
-@Slf4j
+/**
+ * 事务消息回调
+ * @author lizhuo
+ * @since 2020/3/17 15:27
+ */
 @Component
 public class TransactionListenerImpl implements TransactionListener {
 
+private static final Logger LOGGER = LoggerFactory.getLogger(TransactionListenerImpl.class);
 
     @Autowired
     private MessageService messageService;
@@ -27,8 +34,6 @@ public class TransactionListenerImpl implements TransactionListener {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public LocalTransactionState executeLocalTransaction(Message msg, Object arg) {
-        
-        System.out.println("=========executeLocalTransaction============");
         MessageEntity messageEntity = new MessageEntity();
         messageEntity.setCreateTime(new Date());
         String message = MqMsgConvertUtil.bytes2String(msg.getBody(), "UTF-8");
@@ -38,17 +43,15 @@ public class TransactionListenerImpl implements TransactionListener {
         messageEntity.setUpdateTime(new Date());
         messageEntity.setMsgid(msg.getTransactionId());
         messageService.save(messageEntity);
-      //  throw new RuntimeException();
         return LocalTransactionState.UNKNOW;
     }
 
     @Override
     public LocalTransactionState checkLocalTransaction(MessageExt msg) {
-        System.out.println("=========checkLocalTransaction============");
-        log.info("检查消息id={}",msg.getTransactionId());
+        LOGGER.info("检查消息id={}",msg.getTransactionId());
         MessageEntity messageEntity = messageService.getByMsgId(msg.getTransactionId());
         if (null == messageEntity) {
-            log.warn("消息id={}不存在",msg.getTransactionId());
+            LOGGER.warn("消息id={}不存在",msg.getTransactionId());
             return LocalTransactionState.ROLLBACK_MESSAGE;
         }
         return LocalTransactionState.COMMIT_MESSAGE;

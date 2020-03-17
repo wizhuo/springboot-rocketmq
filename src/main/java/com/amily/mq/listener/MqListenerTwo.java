@@ -6,10 +6,10 @@ import com.amily.enums.MqAction;
 import com.amily.mq.command.MqConstant;
 import com.amily.mq.MessageListener;
 import com.amily.util.MqMsgConvertUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.common.message.MessageExt;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 普通消息监听
@@ -19,7 +19,7 @@ import org.apache.rocketmq.common.message.MessageExt;
 @RocketMqListener(topic = MqConstant.ORDER_TABLE_TOP,consumerGroup= MqConstant.ORDER_GROUP)
 public class MqListenerTwo implements MessageListener {
 
-    private static Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LoggerFactory.getLogger(MqListenerTwo.class);
 
 
     @Override

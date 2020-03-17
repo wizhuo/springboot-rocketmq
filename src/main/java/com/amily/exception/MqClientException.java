@@ -2,6 +2,7 @@ package com.amily.exception;
 
 
 /**
+ * mq 客户端异常
  * @author lizhuo
  * @since 2019/1/5 下午9:14
  **/
