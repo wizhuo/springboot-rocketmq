@@ -19,13 +19,11 @@ public class RocketMqFactoryBeanConfig {
 
     @Bean
     public RocketMqConsumer createConsumer(RocketMqProperties configuration, ApplicationContext context) throws Exception {
-        System.out.println("=======createConsumer===");
         return new RocketMqConsumer(configuration, context);
     }
 
     @Bean
     public DefaultMQProducer defaultProducer(RocketMqProperties configuration) throws Exception {
-        System.out.println("=======createProducer===");
         if (configuration.getNamesrvAddr() == null) {
             throw new IllegalArgumentException("rocketmq.nameSrvAddress 是必须的参数");
         }
