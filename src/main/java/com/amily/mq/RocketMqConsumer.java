@@ -107,17 +107,19 @@ public class RocketMqConsumer {
             consumer.subscribe(topic, tag);
             //注册消费回调
             consumer.registerMessageListener((MessageListenerConcurrently) (msgList, context) -> {
-                for (MessageExt msg : msgList) {
-                    if (LOGGER.isDebugEnabled()) {
-                        LOGGER.debug("consume msg={}", msg);
+                try {
+                    for (MessageExt msg : msgList) {
+                        MessageListener listener = (MessageListener) entry.getValue();
+                        MqAction action = listener.consume(msg, context);
+                        switch (action) {
+                            case ReconsumeLater:
+                                return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+                            default:
+                        }
                     }
-                    MessageListener listener = (MessageListener) entry.getValue();
-                    MqAction action = listener.consume(msg, context);
-                    switch (action) {
-                        case ReconsumeLater:
-                            return ConsumeConcurrentlyStatus.RECONSUME_LATER;
-                        default:
-                    }
+                } catch (Exception e) {
+                    LOGGER.error("消费失败", e);
+                    return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                 }
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             });
@@ -174,17 +176,22 @@ public class RocketMqConsumer {
             //注册消费回调
             consumer.registerMessageListener((MessageListenerOrderly) (msgList, context) -> {
 
-                for (MessageExt msg : msgList) {
-                    if (LOGGER.isDebugEnabled()) {
-                        LOGGER.debug("consume msg={}", msg);
+                try {
+                    for (MessageExt msg : msgList) {
+                        if (LOGGER.isDebugEnabled()) {
+                            LOGGER.debug("consume msg={}", msg);
+                        }
+                        MessageOrderListener listener = (MessageOrderListener) entry.getValue();
+                        MqAction action = listener.consume(msg, context);
+                        switch (action) {
+                            case ReconsumeLater:
+                                return ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;
+                            default:
+                        }
                     }
-                    MessageOrderListener listener = (MessageOrderListener) entry.getValue();
-                    MqAction action = listener.consume(msg, context);
-                    switch (action) {
-                        case ReconsumeLater:
-                            return ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;
-                        default:
-                    }
+                } catch (Exception e) {
+                    LOGGER.error("消费失败", e);
+                    return ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;
                 }
                 return ConsumeOrderlyStatus.SUCCESS;
             });
