@@ -3,6 +3,7 @@ package com.amily.enums;
 
 /**
  * 消息确认枚举
+ *
  * @author lizhuo
  * @since 2019/1/5 下午8:55
  **/

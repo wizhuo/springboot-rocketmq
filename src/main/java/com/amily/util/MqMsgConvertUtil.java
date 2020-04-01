@@ -23,12 +23,13 @@ public class MqMsgConvertUtil {
         return baos.toByteArray();
     }
 
-    public static Serializable objectDeserialize(byte[] bytes) throws IOException, ClassNotFoundException {
+    public static Serializable objectDeserialize(byte[] bytes)
+        throws IOException, ClassNotFoundException {
         ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
         ObjectInputStream ois = new ObjectInputStream(bais);
         ois.close();
         bais.close();
-        return (Serializable)ois.readObject();
+        return (Serializable) ois.readObject();
     }
 
     public static final byte[] string2Bytes(String s, String charset) {

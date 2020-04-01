@@ -8,6 +8,7 @@ import org.springframework.core.annotation.Order;
 
 /**
  * rocketmq 的配置文件
+ *
  * @author liz
  * @since 2019/1/4 下午10:14
  **/
@@ -34,8 +35,6 @@ public class RocketMqProperties {
         }
         return producerId;
     }
-
-
 
 
 }

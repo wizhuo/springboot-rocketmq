@@ -10,6 +10,7 @@ import java.lang.annotation.*;
 
 /**
  * 启用mq 注解
+ *
  * @author lizhuo
  * @since 2020/3/17 15:25
  */
@@ -17,11 +18,11 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Import({
-        RocketMqProperties.class,
-        RocketMqConsumerRunner.class,
-        RocketMqProducerService.class,
-        RocketMqProperties.class,
-        RocketMqFactoryBeanConfig.class
+    RocketMqProperties.class,
+    RocketMqConsumerRunner.class,
+    RocketMqProducerService.class,
+    RocketMqProperties.class,
+    RocketMqFactoryBeanConfig.class
 })
 public @interface EnableRocketMq {
 

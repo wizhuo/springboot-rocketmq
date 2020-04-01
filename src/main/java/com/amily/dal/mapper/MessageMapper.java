@@ -1,16 +1,16 @@
 package com.amily.dal.mapper;
 
-import com.amily.dal.entity.MessageEntity;
+import com.amily.dal.entity.MqTransMessageEntity;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 /**
  * <p>
-  *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author lizhuo
  * @since 2019-02-23
  */
-public interface MessageMapper extends BaseMapper<MessageEntity> {
+public interface MessageMapper extends BaseMapper<MqTransMessageEntity> {
 
 }

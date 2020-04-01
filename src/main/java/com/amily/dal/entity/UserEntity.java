@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author lizhuo
@@ -19,25 +19,24 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @TableName("user")
 public class UserEntity extends Model<UserEntity> {
 
-	@TableId(value="id", type= IdType.AUTO)
-	private Integer id;
-	
-	private String username;
-	
-	private Integer age;
-	
+    @TableId(value = "id", type = IdType.AUTO)
+    private Integer id;
+
+    private String username;
+
+    private Integer age;
 
 
     /**
      * 主键值
      */
-	@Override
-	protected Serializable pkVal() {
-		return this.id;
-	}
+    @Override
+    protected Serializable pkVal() {
+        return this.id;
+    }
 
 }

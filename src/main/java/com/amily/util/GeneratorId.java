@@ -16,7 +16,7 @@ import java.util.Enumeration;
  * <p>
  * 全局唯一ID生成器，27位：13位毫秒数时间戳（无格式化）+9位机器码和进程号+5位循环序列号
  * </p>
- * 
+ *
  * @author lizhuo
  * @since 2019/2/19 11:35
  */
@@ -37,13 +37,21 @@ public class GeneratorId {
 
     }
 
-    /** 流水号起始值 */
+    /**
+     * 流水号起始值
+     */
     private static final long MIN_SEQUENCE = 10000L;
-    /** 流水号最大值 */
+    /**
+     * 流水号最大值
+     */
     private static final long MAX_SEQUENCE = 99999L;
-    /** 流水号，在最小最大值之间循环，避免唯一ID的安全性泄露，时间戳精确到毫秒，单机在1毫秒内也不可能生成近十万个业务ID */
+    /**
+     * 流水号，在最小最大值之间循环，避免唯一ID的安全性泄露，时间戳精确到毫秒，单机在1毫秒内也不可能生成近十万个业务ID
+     */
     private static long sequence = MIN_SEQUENCE;
-    /** 机器码 加 进程号 会导致生成的序列号很长, 基于这两个值做一些截取 */
+    /**
+     * 机器码 加 进程号 会导致生成的序列号很长, 基于这两个值做一些截取
+     */
     private static final String MP;
 
     static {
@@ -66,21 +74,21 @@ public class GeneratorId {
         }
     }
 
-    private GeneratorId() {};
+    private GeneratorId() {
+    }
+
+    ;
 
     /**
      * 全局唯一ID生成器，31位：17位毫秒时间戳（格式化后）+9位机器码和进程号+5位循环序列号
-     * 
-     * @return
      */
     public static synchronized String nextFormatId() {
-        return DateFormatUtils.format(System.currentTimeMillis(), "yyyyMMddHHmmssSSS") + MP + nextSequence();
+        return DateFormatUtils.format(System.currentTimeMillis(), "yyyyMMddHHmmssSSS") + MP
+            + nextSequence();
     }
 
     /**
      * 全局唯一ID生成器，27位：13位毫秒数时间戳（无格式化）+9位机器码和进程号+5位循环序列号
-     * 
-     * @return
      */
     private static synchronized String nextMillisId() {
         return System.currentTimeMillis() + MP + nextSequence();
@@ -88,8 +96,6 @@ public class GeneratorId {
 
     /**
      * 生成下一个序列号
-     * 
-     * @return
      */
     private static synchronized long nextSequence() {
         if (sequence >= MAX_SEQUENCE) {
@@ -101,15 +107,14 @@ public class GeneratorId {
 
     /**
      * 获取机器标识符
-     * 
-     * @return
      */
     private static int createMachineIdentifier() {
         // build a 2-byte machine piece based on NICs info
         int machinePiece;
         try {
             StringBuilder stringBuilder = new StringBuilder();
-            Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
+            Enumeration<NetworkInterface> networkInterfaces = NetworkInterface
+                .getNetworkInterfaces();
             while (networkInterfaces.hasMoreElements()) {
                 NetworkInterface networkInterface = networkInterfaces.nextElement();
                 stringBuilder.append(networkInterface.toString());
@@ -136,8 +141,6 @@ public class GeneratorId {
 
     /**
      * 获取JVM进程号，这并不是每个类装入器,因为必须是唯一的
-     * 
-     * @return
      */
     private static int createProcessIdentifier() {
         int processId;

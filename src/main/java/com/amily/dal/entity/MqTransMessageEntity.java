@@ -14,7 +14,7 @@ import java.util.Date;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author lizhuo
@@ -22,39 +22,33 @@ import java.util.Date;
  */
 @Data
 @Accessors(chain = true)
-@EqualsAndHashCode(callSuper=false)
-@TableName("message")
-public class MessageEntity extends Model<MessageEntity> {
+@EqualsAndHashCode(callSuper = false)
+@TableName("mq_trans_message")
+public class MqTransMessageEntity extends Model<MqTransMessageEntity> {
 
-	@TableId(value="id", type= IdType.AUTO)
-	private Integer id;
-	
-	private String topic;
-	
-	private String tag;
-	
-	private String message;
-	
-	@TableField("create_time")
-	private Date createTime;
-	
-	@TableField("update_time")
-	private Date updateTime;
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
 
+    private String topic;
 
-	@TableField("msgid")
-	private String msgid;
-	
-	private String status;
-	
+    private String tag;
+
+    private String message;
+
+    @TableField("create_time")
+    private Date createTime;
+
+    @TableField("update_time")
+    private Date updateTime;
+
 
 
     /**
      * 主键值
      */
-	@Override
-	protected Serializable pkVal() {
-		return this.id;
-	}
+    @Override
+    protected Serializable pkVal() {
+        return this.id;
+    }
 
 }

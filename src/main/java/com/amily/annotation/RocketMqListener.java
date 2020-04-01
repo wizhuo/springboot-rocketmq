@@ -17,6 +17,7 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Component
 public @interface RocketMqListener {
+
     String value() default "";
 
     String topic();

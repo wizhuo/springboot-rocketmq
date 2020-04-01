@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
  * @author lizhuo
  * @since 2019/1/5 下午9:27
  **/
-@RocketMqOrderListener(topic = MqConstant.USER_ORDER_TOPIC,consumerGroup= MqConstant.USER_ORDER_GROUP)
+@RocketMqOrderListener(topic = MqConstant.Top.USER_ORDER_TOPIC, consumerGroup = MqConstant.ConsumeGroup.USER_ORDER_GROUP)
 public class MqOrderMessageRestListener implements MessageOrderListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MqOrderMessageRestListener.class);
@@ -27,10 +27,12 @@ public class MqOrderMessageRestListener implements MessageOrderListener {
         try {
             msg = MqMsgConvertUtil.bytes2String(message.getBody(), "UTF-8");
 
-            LOGGER.info("MsgId:{},MQ消费,Topic:{},Tag:{}，Body:{}", message.getMsgId(), message.getTopic(), message.getTags(), msg);
+            LOGGER.info("MsgId:{},MQ消费,Topic:{},Tag:{}，Body:{}", message.getMsgId(),
+                message.getTopic(), message.getTags(), msg);
 
         } catch (Exception e) {
-            LOGGER.error("MsgId:{},应用MQ消费失败,Topic:{},Tag:{}，Body:{},异常信息:{}", message.getMsgId(), message.getTopic(), message.getTags(), msg, e);
+            LOGGER.error("MsgId:{},应用MQ消费失败,Topic:{},Tag:{}，Body:{},异常信息:{}", message.getMsgId(),
+                message.getTopic(), message.getTags(), msg, e);
             throw e;
         }
         return MqAction.CommitMessage;

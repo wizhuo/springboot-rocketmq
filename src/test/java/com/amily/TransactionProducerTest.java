@@ -1,55 +1,38 @@
 package com.amily;
 
-import com.amily.mq.listener.TransactionListenerImpl;
-import org.apache.rocketmq.client.exception.MQClientException;
-import org.apache.rocketmq.client.producer.SendResult;
-import org.apache.rocketmq.client.producer.TransactionListener;
-import org.apache.rocketmq.client.producer.TransactionMQProducer;
-import org.apache.rocketmq.common.message.Message;
-import org.apache.rocketmq.remoting.common.RemotingHelper;
+import com.amily.service.UserService;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.UnsupportedEncodingException;
-import java.util.concurrent.*;
 
+@SpringBootTest(classes = RocketMqDemoApplication.class)
+@RunWith(SpringRunner.class)
 public class TransactionProducerTest {
 
-    public static void main(String[] args) throws MQClientException, InterruptedException {
-        TransactionListener transactionListener = new TransactionListenerImpl();
-        TransactionMQProducer producer = new TransactionMQProducer("trans_wizhuo_group_name");
-        producer.setNamesrvAddr("120.79.177.244:9876");
-        ExecutorService executorService = new ThreadPoolExecutor(2, 5, 100, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(2000), new ThreadFactory() {
-            @Override
-            public Thread newThread(Runnable r) {
-                Thread thread = new Thread(r);
-                thread.setName("client-transaction-msg-check-thread");
-                return thread;
-            }
-        });
+    @Autowired
+    private UserService userService;
 
-        producer.setExecutorService(executorService);
-        producer.setTransactionListener(transactionListener);
-        producer.start();
+    /**
+     * 测试本地事务成功的时候发送消息也成功
+     */
+    @Test
+    @Rollback(value = false)
+    public void testSuccess() {
+        userService.transMessageSuccess();
+        System.out.println("发送结束");
+    }
 
-        String[] tags = new String[] {"TagA", "TagB", "TagC", "TagD", "TagE"};
-        for (int i = 0; i < 1; i++) {
-            try {
-                Message msg =
-                        new Message("TopicTest1234", tags[i % tags.length], "KEY" + i,
-                                ("Hello RocketMQ " + i).getBytes(RemotingHelper.DEFAULT_CHARSET));
-                System.out.println("=========start send============");
-                SendResult sendResult = producer.sendMessageInTransaction(msg, null);
-                System.out.println("=========after send============");
-                System.out.printf("%s%n", sendResult);
-
-                Thread.sleep(10);
-            } catch (MQClientException | UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-        }
-
-        for (int i = 0; i < 100000; i++) {
-            Thread.sleep(1000);
-        }
-        producer.shutdown();
+    /**
+     * 测试本地事务失败的时候消息也发送失败
+     */
+    @Test
+    @Rollback(value = false)
+    public void testError() throws Exception {
+        userService.transMessageError();
+        System.out.println("发送结束");
     }
 }

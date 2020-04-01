@@ -6,6 +6,7 @@ import java.lang.annotation.*;
 
 /**
  * 有序消息监听
+ *
  * @author lizhuo
  * @since 2019/1/4 下午10:11
  **/
@@ -16,11 +17,12 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Component
 public @interface RocketMqOrderListener {
-	String value() default "";
 
-	String topic();
+    String value() default "";
 
-	String tag() default "*";
+    String topic();
 
-	String consumerGroup();
+    String tag() default "*";
+
+    String consumerGroup();
 }

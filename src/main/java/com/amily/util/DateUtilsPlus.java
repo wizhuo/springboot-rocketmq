@@ -30,7 +30,8 @@ public class DateUtilsPlus extends DateUtils {
     public static final String DATE_BASIC_STYLE = "yyyy-MM-dd HH:mm:ss";
     public static final String DATE_NORMAL_STYLE = "yyyy-MM-dd";
     private static final Pattern DATE_BASIC_PATTERN = Pattern.compile(RegexType.DATE_BASIC);
-    private static final Pattern DATE_BASIC_FORMAT_PATTERN = Pattern.compile("(\\d{4})-(\\d+)-(\\d+).*");
+    private static final Pattern DATE_BASIC_FORMAT_PATTERN = Pattern
+        .compile("(\\d{4})-(\\d+)-(\\d+).*");
 
     /**
      * 获取指定时间的年月日
@@ -126,7 +127,7 @@ public class DateUtilsPlus extends DateUtils {
     /**
      * 根据时间类型的字符串得到指定格式的日期 <br/>
      *
-     * @param date      : 日期
+     * @param date : 日期
      * @param dateStyle | yyyy : 年 | MM : 月 | dd : 日 | HH : 时 | mm : 分 | ss : 秒
      */
     public static Date formatStringByStyleToDate(final String date, final String dateStyle) {
@@ -186,7 +187,7 @@ public class DateUtilsPlus extends DateUtils {
      * 取出开始时间和结束时间之间的时间集合,也包括开始时间和结束时间
      *
      * @param startDate 开始时间
-     * @param endDate   结束时间
+     * @param endDate 结束时间
      * @return 时间集合
      */
     public static List<Date> getDatesBetweenTwoDate(Date startDate, Date endDate) {
@@ -320,7 +321,8 @@ public class DateUtilsPlus extends DateUtils {
     /**
      * {@link #formatStringByStyle(String, String)}
      */
-    public static LocalDateTime formatStringByStyleToLocalDateTime(final String inputTime, final String dateStyle) {
+    public static LocalDateTime formatStringByStyleToLocalDateTime(final String inputTime,
+        final String dateStyle) {
         if (StringUtils.isBlank(inputTime)) {
             return null;
         }
@@ -475,7 +477,8 @@ public class DateUtilsPlus extends DateUtils {
      */
     public static int getDayIntegerValue(Date date) {
         LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        return localDate.getYear() * 10000 + localDate.getMonthValue() * 100 + localDate.getDayOfMonth();
+        return localDate.getYear() * 10000 + localDate.getMonthValue() * 100 + localDate
+            .getDayOfMonth();
     }
 
     /**
@@ -494,7 +497,7 @@ public class DateUtilsPlus extends DateUtils {
      *
      * @param dateTime 需要累计的时间
      * @param timeType 累计时间类型 Calendar.MINUTE(分钟) / Calendar.DAY_OF_MONTH(天数)
-     * @param timeNo   增加分钟数|天数
+     * @param timeNo 增加分钟数|天数
      * @return String
      */
     public static Date dateAddTimes(Date dateTime, int timeType, int timeNo) {
@@ -515,7 +518,6 @@ public class DateUtilsPlus extends DateUtils {
     /**
      * 获取零点
      *
-     * @param 当前时间
      * @return date
      */
     public static Date getZeroOfDate(Date date) {

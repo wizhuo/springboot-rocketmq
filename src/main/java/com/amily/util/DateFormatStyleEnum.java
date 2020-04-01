@@ -3,7 +3,6 @@ package com.amily.util;
 import lombok.Getter;
 
 /**
- *
  * @author lizhuo
  * @since 2019/2/20 16:21
  */

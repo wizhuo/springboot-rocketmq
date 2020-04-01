@@ -19,14 +19,14 @@ public class HelloController {
     private UserService userService;
 
     @GetMapping("/hello")
-    public UserEntity hello(){
-       return userService.selectById(1L);
+    public UserEntity hello() {
+        return userService.selectById(1L);
 
     }
 
     @GetMapping("/trans/test")
-    public Boolean transTest(){
-        return userService.transMessageTest();
+    public Boolean transTest() throws Exception {
+        return userService.transMessageSuccess();
 
     }
 }
