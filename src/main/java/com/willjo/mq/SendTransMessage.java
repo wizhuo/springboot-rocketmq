@@ -7,6 +7,7 @@ import org.apache.rocketmq.client.producer.SendStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.stereotype.Component;
@@ -19,7 +20,7 @@ import java.util.Objects;
  * @since 2020/12/16
  */
 @Component
-public class SendTransMessage implements ApplicationListener<ContextStartedEvent> {
+public class SendTransMessage  implements  ApplicationListener<ApplicationReadyEvent>{
 
     private static final Logger logger = LoggerFactory.getLogger(SendTransMessage.class);
 
@@ -31,10 +32,16 @@ public class SendTransMessage implements ApplicationListener<ContextStartedEvent
 
 
     @Override
-    public void onApplicationEvent(ContextStartedEvent contextStartedEvent) {
+    public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
+        System.out.println("run message send thread");
         new Thread(() -> {
             while (true) {
-                MqTransMessageEntity message = MessageQueue.queue.poll();
+                MqTransMessageEntity message = null;
+                try {
+                    message = MessageQueue.queue.take();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 if (Objects.isNull(message)) {
                     continue;
                 }
@@ -50,14 +57,14 @@ public class SendTransMessage implements ApplicationListener<ContextStartedEvent
                             // 没有值有两种可能姓 ，一种是事务没结束，一种事务没成功
                             long time = System.currentTimeMillis() - message.getCreateTime().getTime();
                             if (time / 1000 > 30) {
-                                // 超过30秒还是查不到，就直接丢弃了，后面有定时任务都低
+                                // 超过30秒还是查不到，就直接丢弃了，后面有定时任务兜底
                                 logger.info(" due to over 30 second, discard message for messageId={}", message.getId());
                                 continue;
 
                             } else {
                                 // 重新加到队尾等下一次处理
                                 logger.info(" add message to queue again for messageId={}", message.getId());
-                                MessageQueue.queue.add(message);
+                                MessageQueue.queue.put(message);
                                 continue;
 
                             }
@@ -69,7 +76,7 @@ public class SendTransMessage implements ApplicationListener<ContextStartedEvent
                                 mqTransMessageService.deleteById(message.getId());
                             } else {
                                 // 如果失败了则放进第二个队列等待发送
-                                MessageQueue.secondQueue.add(message);
+                                MessageQueue.secondQueue.put(message);
                             }
                         }
 
@@ -82,6 +89,6 @@ public class SendTransMessage implements ApplicationListener<ContextStartedEvent
 
 
             }
-        });
+        }).start();
     }
 }

@@ -3,6 +3,7 @@ package com.willjo.mq;
 import com.willjo.dal.entity.MqTransMessageEntity;
 
 import java.util.Queue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
 /**
@@ -14,12 +15,12 @@ public class MessageQueue {
     /**
      * 优先级最高的
      */
-    public static Queue<MqTransMessageEntity> queue = new LinkedBlockingDeque<>();
+    public static BlockingQueue<MqTransMessageEntity> queue = new LinkedBlockingDeque<>();
 
     /**
      * 优先级别比较低的
      */
-    public static Queue<MqTransMessageEntity> secondQueue = new LinkedBlockingDeque<>();
+    public static BlockingQueue<MqTransMessageEntity> secondQueue = new LinkedBlockingDeque<>();
 
 
 

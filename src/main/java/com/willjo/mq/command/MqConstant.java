@@ -12,7 +12,7 @@ public class MqConstant {
      */
     public static class Top {
 
-        public static final String USER_ORDER_TOPIC = "USER_ORDER_TOPIC";
+        public static final String USER_ORDER_TOPIC = "USER_ORDER_TOPIC_TEST";
         public static final String PAY_TOPIC = "PAY_TOPIC";
     }
 
