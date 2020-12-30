@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
  * @author willJo
  * @since 2020/12/30
  */
-@Component
 public class MonitorQueue implements ApplicationListener<ApplicationReadyEvent> {
 
     public static final int MAX_PRIORITY_QUEUE_SIZE = 1000;

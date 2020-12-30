@@ -5,15 +5,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
-import org.springframework.stereotype.Component;
-
-import java.util.Objects;
 
 /**
  * @author willJo
  * @since 2020/12/30
  */
-@Component
 public class TransDelayMessageRunner implements ApplicationListener<ApplicationReadyEvent> {
 
     private static final Logger logger = LoggerFactory.getLogger(TransDelayMessageRunner.class);

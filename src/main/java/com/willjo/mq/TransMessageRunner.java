@@ -19,7 +19,6 @@ import java.util.Objects;
  * @author willJo
  * @since 2020/12/16
  */
-@Component
 public class TransMessageRunner implements ApplicationListener<ApplicationReadyEvent> {
 
     private static final Logger logger = LoggerFactory.getLogger(TransMessageRunner.class);
