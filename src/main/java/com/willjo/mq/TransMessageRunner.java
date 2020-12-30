@@ -1,6 +1,7 @@
 package com.willjo.mq;
 
 import com.willjo.dal.entity.MqTransMessageEntity;
+import com.willjo.message.MqTransMessage;
 import com.willjo.service.MqTransMessageService;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.client.producer.SendStatus;
@@ -9,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.stereotype.Component;
 
 import java.text.MessageFormat;
@@ -20,9 +20,9 @@ import java.util.Objects;
  * @since 2020/12/16
  */
 @Component
-public class SendTransMessage  implements  ApplicationListener<ApplicationReadyEvent>{
+public class TransMessageRunner implements ApplicationListener<ApplicationReadyEvent> {
 
-    private static final Logger logger = LoggerFactory.getLogger(SendTransMessage.class);
+    private static final Logger logger = LoggerFactory.getLogger(TransMessageRunner.class);
 
     @Autowired
     private RocketMqProducerService rocketMqProducerService;
@@ -30,17 +30,24 @@ public class SendTransMessage  implements  ApplicationListener<ApplicationReadyE
     @Autowired
     private MqTransMessageService mqTransMessageService;
 
+    /**
+     * 事务最大等待时间，单位为秒
+     */
+    public static final int TRANS_MAX_WAITING_TIME = 30;
+
+
+
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
         System.out.println("run message send thread");
         new Thread(() -> {
             while (true) {
-                MqTransMessageEntity message = null;
+                MqTransMessage message = null;
                 try {
-                    message = MessageQueue.queue.take();
+                    message = MessageQueue.priorityQueue.take();
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+
                 }
                 if (Objects.isNull(message)) {
                     continue;
@@ -52,43 +59,38 @@ public class SendTransMessage  implements  ApplicationListener<ApplicationReadyE
                         // 查询数据库确保是有值
                         MqTransMessageEntity mqTransMessageEntity = mqTransMessageService.selectById(message.getId());
                         if (Objects.isNull(mqTransMessageEntity)) {
-
-                            logger.info("can not find message in table for messageId={}", message.getId());
-                            // 没有值有两种可能姓 ，一种是事务没结束，一种事务没成功
+                            // 没有值有三种可能姓 ，一种是事务没结束，一种事务没成功，或者已经被定时任务发送了
                             long time = System.currentTimeMillis() - message.getCreateTime().getTime();
-                            if (time / 1000 > 30) {
+                            if(time / 1000 > TRANS_MAX_WAITING_TIME) {
                                 // 超过30秒还是查不到，就直接丢弃了，后面有定时任务兜底
                                 logger.info(" due to over 30 second, discard message for messageId={}", message.getId());
-                                continue;
-
                             } else {
-                                // 重新加到队尾等下一次处理
-                                logger.info(" add message to queue again for messageId={}", message.getId());
-                                MessageQueue.queue.put(message);
-                                continue;
-
+                                // 放到延迟队列处理
+                                logger.info(" add message to delayQueue  for messageId={}", message.getId());
+                                MessageQueue.putInDelayQueue(message);
                             }
+                            continue;
 
                         } else {
                             sendResult = rocketMqProducerService.synSend(message.getTopic(), message.getTag(),
                                     message.getMessage());
-                            if (SendStatus.SEND_OK.equals(sendResult.getSendStatus())) {
+                            if (Objects.nonNull(sendResult) && SendStatus.SEND_OK.equals(sendResult.getSendStatus())) {
                                 mqTransMessageService.deleteById(message.getId());
                             } else {
-                                // 如果失败了则放进第二个队列等待发送
-                                MessageQueue.secondQueue.put(message);
+                                // 网路抖动等原因，继续放在优先队列进行发送
+                                MessageQueue.priorityQueue.put(message);
                             }
                         }
 
                     }
 
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    MessageQueue.secondQueue.add(message);
+                    logger.warn("mq send fail,message={}",e.getMessage(),e);
+                    MessageQueue.putInDelayQueue(message);
                 }
 
 
             }
-        }).start();
+        },"transMessage").start();
     }
 }

@@ -92,7 +92,7 @@ public class MqTransMessageServiceImpl extends
                 .setMessage(content)
                 .setCreateTime(new Date());
         super.insert(msg);
-        return MessageQueue.queue.add(msg);
+        return MessageQueue.putInPriorityQueue(msg);
 
     }
 }

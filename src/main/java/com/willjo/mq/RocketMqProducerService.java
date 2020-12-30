@@ -2,7 +2,10 @@ package com.willjo.mq;
 
 import com.willjo.exception.MqContextException;
 import com.willjo.exception.MqSendException;
+
 import java.util.List;
+import java.util.Objects;
+
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.client.producer.SendResult;
@@ -27,15 +30,14 @@ public class RocketMqProducerService implements SendCallback {
     private DefaultMQProducer rocketProducer;
 
 
-
     private RocketSendCallback rocketSendCallback = new RocketSendCallback();
 
 
     /**
      * 单边发送
      *
-     * @param topic topic
-     * @param tag tag
+     * @param topic   topic
+     * @param tag     tag
      * @param content 字符串消息体
      */
     public void sendOneway(String topic, String tag, String content) {
@@ -60,8 +62,8 @@ public class RocketMqProducerService implements SendCallback {
     /**
      * 异步发送 默认回调函数
      *
-     * @param topic topic
-     * @param tag tag
+     * @param topic   topic
+     * @param tag     tag
      * @param content 字符串消息体
      */
     public void sendAsyncDefault(String topic, String tag, String content) {
@@ -85,8 +87,8 @@ public class RocketMqProducerService implements SendCallback {
     /**
      * 异步发送
      *
-     * @param topic topic
-     * @param tag tag
+     * @param topic   topic
+     * @param tag     tag
      * @param content 字符串消息体
      */
     public void sendAsync(String topic, String tag, String content, SendCallback sendCallback) {
@@ -97,7 +99,7 @@ public class RocketMqProducerService implements SendCallback {
      * 异步发送
      */
     public void sendAsync(String topic, String tag, String content, String keys,
-        SendCallback sendCallback) {
+            SendCallback sendCallback) {
         Message msg = getMessage(topic, tag, keys, content);
         try {
             rocketProducer.send(msg, sendCallback);
@@ -112,8 +114,8 @@ public class RocketMqProducerService implements SendCallback {
     /**
      * 同步发送
      *
-     * @param topic topic
-     * @param tag tag
+     * @param topic   topic
+     * @param tag     tag
      * @param content 字符串消息体
      * @return 可能返回null
      */
@@ -125,8 +127,8 @@ public class RocketMqProducerService implements SendCallback {
     /**
      * 同步发送
      *
-     * @param topic topic
-     * @param tag tag
+     * @param topic   topic
+     * @param tag     tag
      * @param content 字符串消息体
      * @return 可能返回null
      */
@@ -160,17 +162,17 @@ public class RocketMqProducerService implements SendCallback {
      * 有顺序发送
      */
     public SendResult orderSend(String topic, String tag, String keys, String content,
-        int orderId) {
+            int orderId) {
 
         Message msg = getMessage(topic, tag, keys, content);
         try {
             SendResult sendResult = rocketProducer
-                .send(msg, (List<MessageQueue> mqs, Message message, Object arg) -> {
-                        Integer id = (Integer) arg;
-                        int index = id % mqs.size();
-                        return mqs.get(index);
-                    }
-                    , orderId);
+                    .send(msg, (List<MessageQueue> mqs, Message message, Object arg) -> {
+                                Integer id = (Integer) arg;
+                                int index = id % mqs.size();
+                                return mqs.get(index);
+                            }
+                            , orderId);
             this.logMsg(msg, sendResult);
             return sendResult;
         } catch (Exception e) {
@@ -193,8 +195,8 @@ public class RocketMqProducerService implements SendCallback {
     public void onSuccess(final SendResult sendResult) {
         // 消费发送成功
         LOGGER.info(
-            "send message success. topic=" + sendResult.getMessageQueue().getTopic() + ", msgId="
-                + sendResult.getMsgId());
+                "send message success. topic=" + sendResult.getMessageQueue().getTopic() + ", msgId="
+                        + sendResult.getMsgId());
     }
 
 
@@ -203,7 +205,7 @@ public class RocketMqProducerService implements SendCallback {
      */
     private void logMsg(Message message) {
         LOGGER.info("消息队列发送完成:topic={},tag={},msgId={}", message.getTopic(), message.getTags(),
-            message.getKeys());
+                message.getKeys());
     }
 
     /**
@@ -211,7 +213,7 @@ public class RocketMqProducerService implements SendCallback {
      */
     private void logMsg(Message message, SendResult sendResult) {
         LOGGER.info("消息队列发送完成:topic={},tag={},msgId={},sendResult={}", message.getTopic(),
-            message.getTags(), message.getKeys(), sendResult);
+                message.getTags(), message.getKeys(), Objects.nonNull(sendResult) ? sendResult : " result is null");
     }
 
     class RocketSendCallback implements SendCallback {
@@ -219,7 +221,7 @@ public class RocketMqProducerService implements SendCallback {
         @Override
         public void onSuccess(SendResult sendResult) {
             LOGGER.info("send message success. topic=" + sendResult.getMessageQueue().getTopic()
-                + ", msgId=" + sendResult.getMsgId());
+                    + ", msgId=" + sendResult.getMsgId());
         }
 
         @Override
@@ -233,7 +235,7 @@ public class RocketMqProducerService implements SendCallback {
         if (e instanceof MqContextException) {
             MqContextException context = (MqContextException) e;
             LOGGER.error("send message failed. topic=" + context.getTopic() + ", msgId=" + context
-                .getMessageId());
+                    .getMessageId());
         } else {
             LOGGER.error("send message failed. =" + e);
         }
