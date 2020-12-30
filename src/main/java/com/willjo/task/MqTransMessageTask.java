@@ -41,27 +41,27 @@ public class MqTransMessageTask {
 
     @Scheduled(fixedDelay = 5 * 1000)
     public void sendMessage() {
-////        logger.info("====开始执行任务=====");
-//        List<MqTransMessageEntity> list = messageService.list(MAX_MESSAGE_NUM);
-//        LinkedBlockingDeque<Long> successIds = new LinkedBlockingDeque<>();
-//        // 如果执行期间宕机，那么这里会导致消息重发，单消费端必须要保证幂等
-//        list.parallelStream().forEach(messageEntity -> {
-//            String key = MessageFormat.format(MessageLock.LOCK_PREFIX, messageEntity.getId());
-//            synchronized (key.intern()) {
-//                SendResult sendResult = rocketMqProducerService
-//                        .synSend(messageEntity.getTopic(), messageEntity.getTag(),
-//                                messageEntity.getMessage());
-//                if (SendStatus.SEND_OK.equals(sendResult.getSendStatus())) {
-//                    successIds.add(messageEntity.getId());
-//                }
-//            }
-//
-//
-//        });
-//        // 发送成功删除
-//        if (!CollectionUtils.isEmpty(successIds)) {
-//            messageService.del(successIds);
-//        }
+//        logger.info("====开始执行任务=====");
+        List<MqTransMessageEntity> list = messageService.list(MAX_MESSAGE_NUM);
+        LinkedBlockingDeque<Long> successIds = new LinkedBlockingDeque<>();
+        // 如果执行期间宕机，那么这里会导致消息重发，单消费端必须要保证幂等
+        list.parallelStream().forEach(messageEntity -> {
+            String key = MessageFormat.format(MessageLock.LOCK_PREFIX, messageEntity.getId());
+            synchronized (key.intern()) {
+                SendResult sendResult = rocketMqProducerService
+                        .synSend(messageEntity.getTopic(), messageEntity.getTag(),
+                                messageEntity.getMessage());
+                if (SendStatus.SEND_OK.equals(sendResult.getSendStatus())) {
+                    successIds.add(messageEntity.getId());
+                }
+            }
+
+
+        });
+        // 发送成功删除
+        if (!CollectionUtils.isEmpty(successIds)) {
+            messageService.del(successIds);
+        }
 
 
     }
